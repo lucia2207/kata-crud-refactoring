@@ -16,7 +16,7 @@ const List = () => {
   
   
     const onDelete = (id) => {
-      fetch(HOST_API + "/" + id + "/todo", {
+      fetch(HOST_API + "/todo/" + id, {
         method: "DELETE"
       }).then((list) => {
         dispatch({ type: "delete-item", id })
@@ -74,4 +74,3 @@ const List = () => {
 };
 
 export default List;
-
