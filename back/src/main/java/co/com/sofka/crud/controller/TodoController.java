@@ -18,15 +18,16 @@ public class TodoController {
         return service.list();
     }
 
-    @PostMapping(value = "/todo") //crear tarea
-    public Todo save(@RequestBody Todo todo){
-        return service.save(todo);
+    @PostMapping(value = "/todo/{groupListId}") //crear tarea
+    public Todo save(@RequestBody Todo todo, @PathVariable Long groupListId){
+        return service.save(todo, groupListId);
     }
 
     @PutMapping(value = "/todo")// actualizar tarea
     public Todo update(@RequestBody Todo todo){
         if(todo.getId() != null){
-            return service.save(todo);
+            Todo actualizar = service.get(todo.getId());
+            return service.save(todo, actualizar.getGroupListId());
         }
         throw new RuntimeException("No existe el id para actualziar");
     }
