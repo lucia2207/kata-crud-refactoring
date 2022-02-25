@@ -1,5 +1,5 @@
 import React from 'react';
-import StoreProvider from './components/todos/provider';
+import StoreProvider from './provider';
 import ListGroupList from './components/grouplist/ListGroupList';
 
 function App() {

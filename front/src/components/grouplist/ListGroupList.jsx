@@ -1,17 +1,24 @@
-import React from 'react';
+import React, {useContext , useEffect} from 'react';
 import GroupList from './GroupList';
 import FormGroupList from './FormGroupList';
+import { Store, HOST_API } from "../../provider";
 
 const ListGroupList = () => {
-    const grouplistList = [
-        { id: 1, name: "lista de prueba"},
-        { id: 2, name: "lista de prueba 2"}
-    ]
+    const { dispatch, state: { groups } } = useContext(Store);
+    const grouplistList = groups.list;
+
+    useEffect(() => {
+        fetch(HOST_API + "/group")
+            .then(response => response.json())
+            .then(list => {
+                dispatch({ type: "update-group-list", list})
+            })
+    }, [dispatch]);
 
     return <div>
         <FormGroupList />
         {grouplistList.map(lista => {
-            return <GroupList id={lista.id} name={lista.name} />
+            return <GroupList key={lista.id} group={lista} />
         })}
     </div>
 }

@@ -2,19 +2,21 @@ import React, { useReducer, createContext } from 'react';
 import reducer from './reducer';
 
 const Store = createContext();
+const HOST_API = "http://localhost:8080/api";
 
 const StoreProvider = ({ children }) => {
 
     const initialState = {
-        todo: { list: [], item: {} }
-      };
+        todo: { list: [], item: {} },
+        groups: { list: [], item: {} }
+    };
 
     const [state, dispatch] = useReducer(reducer, initialState);
   
     return <Store.Provider value={{ state, dispatch }}>
-      {children}
+        {children}
     </Store.Provider>
   
   }
   export default StoreProvider;
-  export { Store };
+  export { Store, HOST_API };

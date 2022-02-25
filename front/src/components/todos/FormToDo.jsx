@@ -1,9 +1,8 @@
 import React, { useContext, useRef, useState } from 'react';
-import { Store } from './provider' ;
-const HOST_API = "http://localhost:8080/api";
+import { Store, HOST_API } from '../../provider' ;
 
-const FormToDo = () => {
-    const formRef = useRef(null);
+const FormToDo = ({gid}) => {
+    const formToDoRef = useRef(null);
     const { dispatch, state: { todo } } = useContext(Store);
     const item = todo.item;
     const [state, setState] = useState(item);
@@ -14,11 +13,12 @@ const FormToDo = () => {
       const request = {
         name: state.name,
         id: null,
-        completed: false
+        completed: false,
+        groupListid: gid
       };
   
   
-      fetch(HOST_API + "/todo", {
+      fetch(HOST_API + "/todo/" + gid, {
         method: "POST",
         body: JSON.stringify(request),
         headers: {
@@ -29,7 +29,7 @@ const FormToDo = () => {
         .then((todo) => {
           dispatch({ type: "add-item", item: todo });
           setState({ name: "" });
-          formRef.current.reset();
+          formToDoRef.current.reset();
         });
     }
   
@@ -39,7 +39,8 @@ const FormToDo = () => {
       const request = {
         name: state.name,
         id: item.id,
-        isCompleted: item.isCompleted
+        isCompleted: item.isCompleted,
+        groupListid: item.groupListid
       };
   
   
@@ -54,11 +55,11 @@ const FormToDo = () => {
         .then((todo) => {
           dispatch({ type: "update-item", item: todo });
           setState({ name: "" });
-          formRef.current.reset();
+          formToDoRef.current.reset();
         });
     }
   
-    return <form ref={formRef}>
+    return <form ref={formToDoRef}>
       <input
         type="text"
         name="name"
@@ -66,7 +67,11 @@ const FormToDo = () => {
         defaultValue={item.name}
         onChange={(event) => {
           setState({ ...state, name: event.target.value })
-        }}  ></input>
+        }}  />
+      <input
+        type="hidden"
+        name="gid"
+        value={gid} />
       {item.id && <button onClick={onEdit}>Actualizar</button>}
       {!item.id && <button onClick={onAdd}>Crear</button>}
     </form>

@@ -1,13 +1,12 @@
 import React, {useContext , useEffect} from 'react';
-import { Store } from "./provider";
-const HOST_API = "http://localhost:8080/api";
+import { Store, HOST_API } from "../../provider";
 
-const ListToDo = () => {
+const ListToDo = ({ gid }) => {
     const { dispatch, state: { todo } } = useContext(Store);
     const currentList = todo.list;
   
     useEffect(() => {
-      fetch(HOST_API + "/todos")
+      fetch(HOST_API + "/todos/" + gid)
         .then(response => response.json())
         .then((list) => {
           dispatch({ type: "update-list", list })
