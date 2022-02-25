@@ -1,13 +1,8 @@
-import React, { useContext, useReducer, useEffect, useRef, useState, createContext } from 'react';
-import { Store } from './useProvider' ;
+import React, { useContext, useRef, useState } from 'react';
+import { Store } from './provider' ;
 const HOST_API = "http://localhost:8080/api";
 
-const initialState = {
-    todo: { list: [], item: {} }
-  };
-
-
-const Form = () => {
+const FormToDo = () => {
     const formRef = useRef(null);
     const { dispatch, state: { todo } } = useContext(Store);
     const item = todo.item;
@@ -76,4 +71,4 @@ const Form = () => {
       {!item.id && <button onClick={onAdd}>Crear</button>}
     </form>
   }
-  export default Form;
+  export default FormToDo;
