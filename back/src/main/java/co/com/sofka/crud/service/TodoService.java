@@ -27,4 +27,5 @@ public class TodoService {
          return repository.findById(id).orElseThrow();
     }
 
+    public Iterable<Todo> getByGroupListId(Long id) { return repository.findByGroupListId(id); }
 }
