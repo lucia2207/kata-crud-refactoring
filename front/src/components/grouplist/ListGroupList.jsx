@@ -4,7 +4,8 @@ import FormGroupList from './FormGroupList';
 
 const ListGroupList = () => {
     const grouplistList = [
-        { id: 1, name: "lista de prueba"}
+        { id: 1, name: "lista de prueba"},
+        { id: 2, name: "lista de prueba 2"}
     ]
 
     return <div>
