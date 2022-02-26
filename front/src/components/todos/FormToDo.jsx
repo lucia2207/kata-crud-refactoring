@@ -2,7 +2,7 @@ import React, { useContext, useRef, useState } from 'react';
 import { Store, HOST_API } from '../../provider' ;
 
 const FormToDo = ({gid}) => {
-    const formToDoRef = useRef(null);
+    const formToDoRef = useRef(gid);
     const { dispatch, state: { todo } } = useContext(Store);
     const item = todo.item;
     const [state, setState] = useState(item);
@@ -68,10 +68,6 @@ const FormToDo = ({gid}) => {
         onChange={(event) => {
           setState({ ...state, name: event.target.value })
         }}  />
-      <input
-        type="hidden"
-        name="gid"
-        value={gid} />
       {item.id && <button onClick={onEdit}>Actualizar</button>}
       {!item.id && <button onClick={onAdd}>Crear</button>}
     </form>

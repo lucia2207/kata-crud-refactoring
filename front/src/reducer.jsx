@@ -49,10 +49,19 @@ function reducer(state, action) {
 
         case 'delete-group-item':
             const groupsDel = state.groups;
+            const todosGroupDel = state.todo;
             const groupsUpdate = groupsDel.list.filter((item) => {
                 return item.id !== action.id;
             });
-            return { ...state, groups: { list: groupsUpdate } }
+            const todosGroupUpdate = todosGroupDel.list.filter((item) => {
+                return item.groupListId !== action.id;
+            })
+
+            const newState = { ...state };
+            newState.groups.list = groupsUpdate;
+            newState.todo.list = todosGroupUpdate;
+            newState.todo.item = {};
+            return newState;
 
         case 'update-group-list':
             const groupsUpList = state.groups;

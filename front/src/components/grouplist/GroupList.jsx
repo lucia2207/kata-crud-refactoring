@@ -10,8 +10,8 @@ const GroupList = ({group}) => {
     const onDeleteGroup = (id) => {
         fetch(HOST_API + "/group/" + id, {
             method: "DELETE"
-        }).then((list) => {
-            dispatch({ type: "delete-group-item", id })
+        }).then(() => {
+            dispatch({ type: "delete-group-item", id });
         })
     }
 

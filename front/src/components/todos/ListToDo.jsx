@@ -6,7 +6,7 @@ const ListToDo = ({ gid }) => {
     const currentList = todo.list;
   
     useEffect(() => {
-      fetch(HOST_API + "/todos/" + gid)
+      fetch(HOST_API + "/todos")
         .then(response => response.json())
         .then((list) => {
           dispatch({ type: "update-list", list })
@@ -17,7 +17,7 @@ const ListToDo = ({ gid }) => {
     const onDelete = (id) => {
       fetch(HOST_API + "/todo/" + id, {
         method: "DELETE"
-      }).then((list) => {
+      }).then(() => {
         dispatch({ type: "delete-item", id })
       })
     };
@@ -58,7 +58,7 @@ const ListToDo = ({ gid }) => {
           </tr>
         </thead>
         <tbody>
-          {currentList.map((todo) => {
+          {currentList.filter(todo => todo.groupListId === gid).map((todo) => {
             return <tr key={todo.id} style={todo.completed ? decorationDone : {}}>
               <td>{todo.id}</td>
               <td>{todo.name}</td>

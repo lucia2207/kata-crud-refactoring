@@ -2,10 +2,11 @@ import React, { useContext, useRef, useState } from 'react';
 import { Store, HOST_API } from '../../provider' ;
 
 const FormGroupList = () => {
-    const formRef = useRef(null);
     const { dispatch, state: { groups } } = useContext(Store);
     const group = groups.item;
     const [state, setState] = useState(group);
+    
+    const formRef = useRef(null);
 
     const onAdd = (event) => {
         event.preventDefault();
@@ -45,7 +46,7 @@ const FormGroupList = () => {
             }
         }).then(response => response.json())
             .then((group) => {
-                dispatch({ type: "update-item", item: group });
+                dispatch({ type: "update-group-item", item: group });
                 setState({ name: "" });
                 formRef.current.reset();
             });
