@@ -21,11 +21,17 @@ public class GroupListCont {
 
     @PostMapping(value = "/group") //crear tarea
     public GroupList save(@RequestBody GroupList grupo){
+        if (grupo.getName().trim().isEmpty()) {
+            throw new RuntimeException("El campo name esta vacio");
+        }
         return service.save(grupo);
     }
 
     @PutMapping(value = "/group")// actualizar tarea
     public GroupList update(@RequestBody GroupList grupo){
+        if (grupo.getName().trim().isEmpty()) {
+            throw new RuntimeException("El campo name esta vacio");
+        }
         if(grupo.getId() != null){
             return service.save(grupo);
         }
