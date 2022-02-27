@@ -39,12 +39,19 @@ public class TodoService {
         GroupList grupo = repoGroupList.findById(groupListId).orElseThrow();
         todo.setGroupListId(groupListId);
 
+
         Todo nuevo = new Todo();
         nuevo.setName(todo.getName());
         nuevo.setCompleted(todo.isCompleted());
         nuevo.setGroupListId(groupListId);
 
+        if (todo.getId() != null)
+        {
+            nuevo.setId(todo.getId());
+        }
+
         Todo guardado = repository.save(nuevo);
+        todo.setId(guardado.getId());
 
         return todo;
     }

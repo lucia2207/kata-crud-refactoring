@@ -4,7 +4,6 @@ import { Store, HOST_API } from '../../provider' ;
 const FormToDo = ({gid}) => {
     const formToDoRef = useRef(gid);
     const { dispatch, state: { todo, editTodo } } = useContext(Store);
-    // const item = todo.item;
     const item = editTodo.find(elemento => elemento.groupListId === gid) || {};
     const [state, setState] = useState(item);
 
