@@ -52,17 +52,16 @@ const FormGroupList = () => {
             });
     }
 
-    return <form ref={formRef}>
+    return <form ref={formRef} className="input-group">
         <input
-            type="text"
             name="name"
-            placeholder="Crear una lista de tareas"
+            type="text" className="form-control" placeholder="Nombra tu Lista" 
             defaultValue={group.name}
             onChange={(event) => {
                 setState({...state, name: event.target.value})
             }} />
-        {group.id && <button onClick={onEdit}>Actualizar Lista</button>}
-        {!group.id && <button onClick={onAdd}>Crear Lista</button>}
+        {group.id && <button onClick={onEdit} className="btn btn-outline-secondary">Actualizar Lista</button>}
+        {!group.id && <button onClick={onAdd} className="btn btn-outline-secondary" id="button-addon2">Crear Lista</button>}
     </form>
 }
 

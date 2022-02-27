@@ -4,7 +4,7 @@ import { Store, HOST_API } from "../../provider";
 import FormToDo from '../todos/FormToDo';
 import ListToDo from '../todos/ListToDo';
 
-const GroupList = ({group}) => {
+const GroupList = ({group, showCRUD}) => {
     const { dispatch } = useContext(Store);
 
     const onDeleteGroup = (id) => {
@@ -19,10 +19,10 @@ const GroupList = ({group}) => {
         dispatch({ type: "edit-group-item", item: group })
     }
 
-    return <div>
-        <h3>{group.name} ({group.id})</h3>
-        <button onClick={() => onDeleteGroup(group.id)}>Eliminar</button>
-        <button onClick={() => onEditGroup(group)}>Editar</button>
+    return <div className="col group-list">
+        <h3>{group.name}</h3>
+        {showCRUD && <button onClick={() => onDeleteGroup(group.id)} className="btn btn-outline-danger">Eliminar</button>}
+        {false && <button onClick={() => onEditGroup(group)} className="btn btn-outline-warning">Editar</button>}
         <FormToDo gid={group.id}/>
         <ListToDo gid={group.id}/>
     </div>

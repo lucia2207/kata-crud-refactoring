@@ -10,7 +10,11 @@ function reducer(state, action) {
             });
             todoUpItem.list = listUpdateEdit;
             todoUpItem.item = {};
-            return { ...state, todo: todoUpItem }
+
+            const updateEditTodos = state.editTodo.filter((item) => {
+                return item.id !== action.item.id;
+            })
+            return { ...state, todo: todoUpItem, editTodo: updateEditTodos }
 
         case 'delete-item':
             const todoUpDelete = state.todo;
@@ -26,9 +30,12 @@ function reducer(state, action) {
             return { ...state, todo: todoUpList }
         
         case 'edit-item':
+            console.log("Reducer edit-item", state) ;
             const todoUpEdit = state.todo;
             todoUpEdit.item = action.item;
-            return { ...state, todo: todoUpEdit }
+            const editsDeTodos = state.editTodo;
+            editsDeTodos.push(action.item);
+            return { ...state, todo: todoUpEdit, editTodo: editsDeTodos }
 
         case 'add-item':
             const todoUp = state.todo.list;

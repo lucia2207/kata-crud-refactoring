@@ -49,22 +49,23 @@ const ListToDo = ({ gid }) => {
       textDecoration: 'line-through'
     };
     return <div>
-      <table >
+      <table className= "table">
         <thead>
           <tr>
-            <td>ID</td>
-            <td>Tarea</td>
-            <td>¿Completado?</td>
+            <th>Tarea</th>
+            <th>¿Completado?</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {currentList.filter(todo => todo.groupListId === gid).map((todo) => {
             return <tr key={todo.id} style={todo.completed ? decorationDone : {}}>
-              <td>{todo.id}</td>
               <td>{todo.name}</td>
-              <td><input type="checkbox" defaultChecked={todo.completed} onChange={(event) => onChange(event, todo)}></input></td>
-              <td><button onClick={() => onDelete(todo.id)}>Eliminar</button></td>
-              <td><button onClick={() => onEdit(todo)}>Editar</button></td>
+              <td><input className="form-check-input" type="checkbox" defaultChecked={todo.completed} onChange={(event) => onChange(event, todo)}></input></td>
+              <td>
+                <button className="btn btn-danger" onClick={() => onDelete(todo.id)}>Eliminar</button>
+                <button className="btn btn-warning" onClick={() => onEdit(todo)} disabled={todo.completed} >Editar</button>
+              </td>
             </tr>
           })}
         </tbody>
