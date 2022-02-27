@@ -2,8 +2,14 @@ package co.com.sofka.crud.controller;
 
 import co.com.sofka.crud.model.Todo;
 import co.com.sofka.crud.service.TodoService;
+import jdk.jshell.spi.ExecutionControlProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -14,42 +20,82 @@ public class TodoController {
     private TodoService service;
 
     @GetMapping(value = "/todos") //devuelve allToDos
-    public Iterable<Todo> list(){
-        return service.list();
+    public ResponseEntity<List<Todo>> list(){
+        List<Todo> todos = new ArrayList<Todo>();
+        service.list().forEach(todos::add);
+
+        if (todos.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(todos, HttpStatus.OK);
     }
 
     @PostMapping(value = "/todo/{groupListId}") //crear tarea
-    public Todo save(@RequestBody Todo todo, @PathVariable Long groupListId){
+    public ResponseEntity<Todo> save(@RequestBody Todo todo, @PathVariable Long groupListId){
         if (todo.getName().trim().isEmpty()){
-            throw new RuntimeException("El campo name esta vacio") ;
+            return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
-        return service.save(todo, groupListId);
+        try {
+            service.save(todo, groupListId);
+            return new ResponseEntity<>(todo, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
+        }
     }
 
     @PutMapping(value = "/todo")// actualizar tarea
-    public Todo update(@RequestBody Todo todo){
+    public ResponseEntity<Todo> update(@RequestBody Todo todo){
         if (todo.getName().trim().isEmpty()) {
-            throw new RuntimeException("El campo name esta vacio");
+            return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
         if(todo.getId() != null){
-            Todo actualizar = service.get(todo.getId());
-            return service.save(todo, actualizar.getGroupListId());
+            Todo actualizar;
+            try {
+                actualizar = service.get(todo.getId());
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            try {
+                Todo nuevo = service.save(todo, actualizar.getGroupListId());
+                return new ResponseEntity<>(nuevo, HttpStatus.OK);
+            } catch (Exception e){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         }
-        throw new RuntimeException("No existe el id para actualziar");
+        return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
     }
 
     @DeleteMapping(value = "/todo/{id}")//borrar tarea
-    public void delete(@PathVariable("id")Long id){
-        service.delete(id);
+    public ResponseEntity<?> delete(@PathVariable("id")Long id){
+        try {
+            Todo aborrar = service.get(id);
+            service.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping(value = "/todo/{id}")//obtener 1
-    public Todo get(@PathVariable("id") Long id){
-        return service.get(id);
+    public ResponseEntity<Todo> get(@PathVariable("id") Long id){
+        try {
+            return new ResponseEntity<>(service.get(id), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping(value = "/todos/{groupid}") //obtener por grupos
-    public Iterable<Todo> listByGroupListId(@PathVariable("groupid")Long groupid) {
-        return service.getByGroupListId(groupid);
+    public ResponseEntity<List<Todo>> listByGroupListId(@PathVariable("groupid")Long groupid) {
+        List<Todo> todos = new ArrayList<Todo>();
+        service.getByGroupListId(groupid).forEach(todos::add);
+
+        if (todos.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(todos, HttpStatus.OK);
     }
 }
