@@ -11,3 +11,23 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+h3 {
+  display: inline;
+}
+
+.group-list button {
+  margin: 0 0 0 1.5em ;
+}
+
+.group-list {
+    border: solid 1px #666;
+    box-shadow: 4px 4px 5px #666;
+    padding: 1em;
+    background-color:#d2f4ea;
+}
+
+form {
+  margin: 2em 0;
+}
+

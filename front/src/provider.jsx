@@ -8,7 +8,8 @@ const StoreProvider = ({ children }) => {
 
     const initialState = {
         todo: { list: [], item: {} },
-        groups: { list: [], item: {} }
+        groups: { list: [], item: {} },
+        editTodo: []
     };
 
     const [state, dispatch] = useReducer(reducer, initialState);
