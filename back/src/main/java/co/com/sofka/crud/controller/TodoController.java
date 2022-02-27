@@ -1,6 +1,7 @@
 package co.com.sofka.crud.controller;
 
 import co.com.sofka.crud.model.Todo;
+import co.com.sofka.crud.model.TodoDTO;
 import co.com.sofka.crud.service.TodoService;
 import jdk.jshell.spi.ExecutionControlProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ public class TodoController {
     private TodoService service;
 
     @GetMapping(value = "/todos") //devuelve allToDos
-    public ResponseEntity<List<Todo>> list(){
-        List<Todo> todos = new ArrayList<Todo>();
+    public ResponseEntity<List<TodoDTO>> list(){
+        List<TodoDTO> todos = new ArrayList<TodoDTO>();
         service.list().forEach(todos::add);
 
         if (todos.isEmpty()){
@@ -32,25 +33,25 @@ public class TodoController {
     }
 
     @PostMapping(value = "/todo/{groupListId}") //crear tarea
-    public ResponseEntity<Todo> save(@RequestBody Todo todo, @PathVariable Long groupListId){
+    public ResponseEntity<TodoDTO> save(@RequestBody TodoDTO todo, @PathVariable Long groupListId){
         if (todo.getName().trim().isEmpty()){
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
         try {
-            service.save(todo, groupListId);
-            return new ResponseEntity<>(todo, HttpStatus.CREATED);
+            TodoDTO nuevo = service.save(todo, groupListId);
+            return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
     }
 
     @PutMapping(value = "/todo")// actualizar tarea
-    public ResponseEntity<Todo> update(@RequestBody Todo todo){
+    public ResponseEntity<TodoDTO> update(@RequestBody TodoDTO todo){
         if (todo.getName().trim().isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
         if(todo.getId() != null){
-            Todo actualizar;
+            TodoDTO actualizar;
             try {
                 actualizar = service.get(todo.getId());
             } catch (Exception e) {
@@ -58,7 +59,7 @@ public class TodoController {
             }
 
             try {
-                Todo nuevo = service.save(todo, actualizar.getGroupListId());
+                TodoDTO nuevo = service.save(todo, actualizar.getGroupListId());
                 return new ResponseEntity<>(nuevo, HttpStatus.OK);
             } catch (Exception e){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -70,7 +71,7 @@ public class TodoController {
     @DeleteMapping(value = "/todo/{id}")//borrar tarea
     public ResponseEntity<?> delete(@PathVariable("id")Long id){
         try {
-            Todo aborrar = service.get(id);
+            TodoDTO aborrar = service.get(id);
             service.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e){
@@ -79,7 +80,7 @@ public class TodoController {
     }
 
     @GetMapping(value = "/todo/{id}")//obtener 1
-    public ResponseEntity<Todo> get(@PathVariable("id") Long id){
+    public ResponseEntity<TodoDTO> get(@PathVariable("id") Long id){
         try {
             return new ResponseEntity<>(service.get(id), HttpStatus.OK);
         } catch (Exception e){
@@ -88,8 +89,8 @@ public class TodoController {
     }
 
     @GetMapping(value = "/todos/{groupid}") //obtener por grupos
-    public ResponseEntity<List<Todo>> listByGroupListId(@PathVariable("groupid")Long groupid) {
-        List<Todo> todos = new ArrayList<Todo>();
+    public ResponseEntity<List<TodoDTO>> listByGroupListId(@PathVariable("groupid")Long groupid) {
+        List<TodoDTO> todos = new ArrayList<TodoDTO>();
         service.getByGroupListId(groupid).forEach(todos::add);
 
         if (todos.isEmpty()){

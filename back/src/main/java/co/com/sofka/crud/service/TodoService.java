@@ -2,10 +2,14 @@ package co.com.sofka.crud.service;
 
 import co.com.sofka.crud.model.GroupList;
 import co.com.sofka.crud.model.Todo;
+import co.com.sofka.crud.model.TodoDTO;
 import co.com.sofka.crud.repository.GroupListRepo;
 import co.com.sofka.crud.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TodoService {
@@ -16,23 +20,63 @@ public class TodoService {
     @Autowired
     private GroupListRepo repoGroupList;
 
-    public Iterable<Todo> list(){
-        return repository.findAll();
+    public Iterable<TodoDTO> list(){
+        List<TodoDTO> todos = new ArrayList<TodoDTO>();
+        repository.findAll().forEach((todo) -> {
+            TodoDTO dto = new TodoDTO();
+
+            dto.setId(todo.getId());
+            dto.setName(todo.getName());
+            dto.setCompleted(todo.isCompleted());
+            dto.setGroupListId(todo.getGroupListId());
+
+            todos.add(dto);
+        });
+        return todos;
     }
 
-    public Todo save(Todo todo, Long groupListId){
+    public TodoDTO save(TodoDTO todo, Long groupListId){
         GroupList grupo = repoGroupList.findById(groupListId).orElseThrow();
         todo.setGroupListId(groupListId);
-        return repository.save(todo);
+
+        Todo nuevo = new Todo();
+        nuevo.setName(todo.getName());
+        nuevo.setCompleted(todo.isCompleted());
+        nuevo.setGroupListId(groupListId);
+
+        Todo guardado = repository.save(nuevo);
+
+        return todo;
     }
 
     public void delete(Long id){
-        repository.delete(get(id));
+        Todo todo = repository.findById(id).orElseThrow();
+        repository.delete(todo);
     }
 
-    public Todo get(Long id){
-         return repository.findById(id).orElseThrow();
+    public TodoDTO get(Long id){
+        Todo todo = repository.findById(id).orElseThrow();
+        TodoDTO dto = new TodoDTO();
+        dto.setId(todo.getId());
+        dto.setName(todo.getName());
+        dto.setCompleted(todo.isCompleted());
+        dto.setGroupListId(todo.getGroupListId());
+
+        return dto;
     }
 
-    public Iterable<Todo> getByGroupListId(Long id) { return repository.findByGroupListId(id); }
+    public Iterable<TodoDTO> getByGroupListId(Long id) {
+        List<TodoDTO> todos = new ArrayList<TodoDTO>();
+        repository.findByGroupListId(id).forEach((todo) -> {
+            TodoDTO dto = new TodoDTO();
+            dto.setId(todo.getId());
+            dto.setName(todo.getName());
+            dto.setCompleted(todo.isCompleted());
+            dto.setGroupListId(todo.getGroupListId());
+
+            todos.add(dto);
+        });
+
+        return todos;
+    }
 }
