@@ -11,7 +11,6 @@ public class Todo {
     private boolean completed;
 
     private Long groupListId;
-    // private GroupList groupList;
 
     public Long getGroupListId() {
         return groupListId;
@@ -44,10 +43,4 @@ public class Todo {
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
-
-    /*
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "groupListId")
-    public GroupList getGroupList() { return groupList; }
-     */
 }
